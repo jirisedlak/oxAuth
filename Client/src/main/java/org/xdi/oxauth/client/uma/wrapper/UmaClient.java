@@ -6,6 +6,7 @@
 
 package org.xdi.oxauth.client.uma.wrapper;
 
+import org.jboss.resteasy.client.ClientExecutor;
 import org.xdi.oxauth.client.*;
 import org.xdi.oxauth.model.common.AuthenticationMethod;
 import org.xdi.oxauth.model.common.GrantType;
@@ -162,12 +163,17 @@ public class UmaClient {
     }
 
     public static Token request(final String tokenUrl, final TokenRequest tokenRequest) throws Exception {
+        return request(tokenUrl, tokenRequest, null);
+    }
+
+    public static Token request(final String tokenUrl, final TokenRequest tokenRequest, ClientExecutor clientExecutor) throws Exception {
     	if (tokenRequest.getGrantType() != GrantType.CLIENT_CREDENTIALS) {
     		return null;
     	}
 
         TokenClient tokenClient = new TokenClient(tokenUrl);
 
+    	tokenClient.setExecutor(clientExecutor);
         tokenClient.setRequest(tokenRequest);
 
         TokenResponse response = tokenClient.exec();
